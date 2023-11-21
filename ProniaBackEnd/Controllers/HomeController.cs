@@ -16,7 +16,11 @@ namespace ProniaBackEnd.Controllers
         public IActionResult Index()
         {
             List<Slide> slides = _db.Slides.OrderBy(s=>s.Order).Take(2).ToList();
-            List<Product> products = _db.Products.Include(p=>p.ProductImages).Take(8).ToList();
+
+            List<Product> products = _db.Products.Include(p=>p.ProductImages.Where(pi=>pi.IsPrimary!=null)).Take(8).ToList();
+
+            List<Product> product = _db.Products.Include(p=>p.ProductImages).Take(8).ToList();
+
 
             HomeVM vm = new HomeVM
             {

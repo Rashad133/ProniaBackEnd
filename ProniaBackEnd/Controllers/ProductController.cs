@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using ProniaBackEnd.DAL;
 using ProniaBackEnd.Models;
+using ProniaBackEnd.ViewModels;
+
 
 namespace ProniaBackEnd.Controllers
 {
@@ -22,17 +24,36 @@ namespace ProniaBackEnd.Controllers
         public IActionResult Detail(int id)
         {
         
-
             if(id <= 0) return BadRequest();
            
+            Product product = _db.Products
+                .Include(p=>p.Category)
+                .Include(p=>p.ProductImages)
+                .Include(p=>p.ProductTags).ThenInclude(pt=>pt.Tag)
+                .Include(p=>p.ProductColors).ThenInclude(pt=>pt.Color)
+                .Include(p=>p.ProductSizes).ThenInclude(pt=>pt.Size)
+                .FirstOrDefault(x => x.Id == id);
 
-            Product product = _db.Products.Include(p=>p.Category).FirstOrDefault(x => x.Id == id);
-
-            List<Product> products = _db.Products.Where(p=>p.CategoryId==product.CategoryId).ToList();
 
             if(product == null) return NotFound();
 
-            return View(product);
+            List<Product> products = _db.Products
+                .Include(p=>p.ProductImages.Where(pi=>pi.IsPrimary!=null))
+                .Where(p => p.CategoryId == product.CategoryId && p.Id != product.Id)
+                .ToList();
+
+
+            DetailVM vm = new DetailVM
+            {
+                Product = product,
+                RelatedProducts = products,
+            };
+
+            return View(vm);
+
+
+            
+
         }
 
     }

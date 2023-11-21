@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProniaBackEnd.DAL;
 
@@ -11,9 +12,11 @@ using ProniaBackEnd.DAL;
 namespace ProniaBackEnd.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231120210816_CreateSizesTableAndProductSizesTable")]
+    partial class CreateSizesTableAndProductSizesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,7 +41,6 @@ namespace ProniaBackEnd.Migrations
 
                     b.ToTable("Categories");
                 });
-
 
             modelBuilder.Entity("ProniaBackEnd.Models.Color", b =>
                 {
@@ -94,7 +96,6 @@ namespace ProniaBackEnd.Migrations
                     b.ToTable("Products");
                 });
 
-
             modelBuilder.Entity("ProniaBackEnd.Models.ProductColor", b =>
                 {
                     b.Property<int>("Id")
@@ -117,7 +118,6 @@ namespace ProniaBackEnd.Migrations
 
                     b.ToTable("ProductColors");
                 });
-
 
             modelBuilder.Entity("ProniaBackEnd.Models.ProductImage", b =>
                 {
@@ -147,7 +147,6 @@ namespace ProniaBackEnd.Migrations
 
                     b.ToTable("ProductImages");
                 });
-
 
             modelBuilder.Entity("ProniaBackEnd.Models.ProductSize", b =>
                 {
@@ -212,7 +211,6 @@ namespace ProniaBackEnd.Migrations
                     b.ToTable("Sizes");
                 });
 
-
             modelBuilder.Entity("ProniaBackEnd.Models.Slide", b =>
                 {
                     b.Property<int>("Id")
@@ -246,7 +244,6 @@ namespace ProniaBackEnd.Migrations
                     b.ToTable("Slides");
                 });
 
-
             modelBuilder.Entity("ProniaBackEnd.Models.Tag", b =>
                 {
                     b.Property<int>("Id")
@@ -264,7 +261,6 @@ namespace ProniaBackEnd.Migrations
                     b.ToTable("Tags");
                 });
 
-
             modelBuilder.Entity("ProniaBackEnd.Models.Product", b =>
                 {
                     b.HasOne("ProniaBackEnd.Models.Category", "Category")
@@ -273,7 +269,6 @@ namespace ProniaBackEnd.Migrations
 
                     b.Navigation("Category");
                 });
-
 
             modelBuilder.Entity("ProniaBackEnd.Models.ProductColor", b =>
                 {
@@ -293,7 +288,6 @@ namespace ProniaBackEnd.Migrations
 
                     b.Navigation("Product");
                 });
-
 
             modelBuilder.Entity("ProniaBackEnd.Models.ProductImage", b =>
                 {
@@ -324,7 +318,7 @@ namespace ProniaBackEnd.Migrations
                 });
 
             modelBuilder.Entity("ProniaBackEnd.Models.ProductTag", b =>
-            {
+                {
                     b.HasOne("ProniaBackEnd.Models.Product", "Product")
                         .WithMany("ProductTags")
                         .HasForeignKey("ProductId")
@@ -340,8 +334,7 @@ namespace ProniaBackEnd.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("Tag");
-            });
-
+                });
 
             modelBuilder.Entity("ProniaBackEnd.Models.Category", b =>
                 {
@@ -372,14 +365,8 @@ namespace ProniaBackEnd.Migrations
             modelBuilder.Entity("ProniaBackEnd.Models.Tag", b =>
                 {
                     b.Navigation("ProductTags");
-
-                    modelBuilder.Entity("ProniaBackEnd.Models.Product", b =>
-                        {
-                            b.Navigation("ProductImages");
-
-                        });
-
                 });
+#pragma warning restore 612, 618
         }
     }
 }
