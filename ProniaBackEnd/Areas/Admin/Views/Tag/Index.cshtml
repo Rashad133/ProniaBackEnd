@@ -1,0 +1,57 @@
+﻿@model List<Tag>
+
+@{
+    int count = 0;
+}
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title"> Tags Table</h4>
+
+            <a asp-controller="Tag" asp-action="Create" class="btn btn-success">Create Tag </a>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                No
+                            </th>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Products Count
+                            </th>
+                            <th>
+                                Settings
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (Tag tag in Model)
+                        {
+                            count++;
+                            <tr>
+                                <td>
+                                    @count
+                                </td>
+                                <td>
+                                    @tag.Name
+                                </td>
+                                <td>
+                                    @tag.ProductTags.Count
+                                </td>
+                                <td>
+                                    <a class="btn btn-warning btn-info"><i class="mdi mdi-grease-pencil"></i></a>
+                                    <a class="btn btn-danger btn-info"><i class="mdi mdi-delete"></i></a>
+                                    <a class="btn btn-primary btn-info"><i class="mdi mdi-open-in-new"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

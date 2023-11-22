@@ -1,0 +1,57 @@
+﻿@model List<Category>
+
+@{
+    int count = 0;
+}
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Category Table</h4>
+
+            <a asp-controller="Category" asp-action="Create" class="btn btn-success">Create Category</a>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                No
+                            </th>
+                            <th>
+                                 Name
+                            </th>
+                             <th>
+                                Products Count
+                            </th>
+                            <th>
+                                Settings
+                            </th>
+                           
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (Category category in Model)
+                        {
+                            count++;
+                            <tr>
+                                <td>
+                                    @count
+                                </td>
+                                <td>
+                                    @category.Name
+                                </td>
+                                <td>
+                                    @category.Products.Count
+                                </td>
+                                <td>
+                                    <a class="btn btn-warning btn-info"><i class="mdi mdi-grease-pencil"></i></a>
+                                    <a class="btn btn-danger btn-info"><i class="mdi mdi-delete"></i></a>
+                                    <a class="btn btn-primary btn-info"><i class="mdi mdi-open-in-new"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -21,26 +21,26 @@ namespace ProniaBackEnd.Controllers
         //}
 
 
-        public IActionResult Detail(int id)
+        public async Task<IActionResult> Detail(int id)
         {
         
             if(id <= 0) return BadRequest();
            
-            Product product = _db.Products
+            Product product = await _db.Products
                 .Include(p=>p.Category)
                 .Include(p=>p.ProductImages)
                 .Include(p=>p.ProductTags).ThenInclude(pt=>pt.Tag)
                 .Include(p=>p.ProductColors).ThenInclude(pt=>pt.Color)
                 .Include(p=>p.ProductSizes).ThenInclude(pt=>pt.Size)
-                .FirstOrDefault(x => x.Id == id);
+                .FirstOrDefaultAsync(x => x.Id == id);
 
 
             if(product == null) return NotFound();
 
-            List<Product> products = _db.Products
+            List<Product> products = await _db.Products
                 .Include(p=>p.ProductImages.Where(pi=>pi.IsPrimary!=null))
                 .Where(p => p.CategoryId == product.CategoryId && p.Id != product.Id)
-                .ToList();
+                .ToListAsync();
 
 
             DetailVM vm = new DetailVM
