@@ -1,20 +1,20 @@
-﻿@model Category
+﻿@model Tag
 
 
 <div class="col-12 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">Create Category</h4>
+            <h4 class="card-title">Create Tag </h4>
 
             <form class="forms-sample" method="post">
                 <div class="form-group">
                     <label asp-for="Name">Name</label>
-                    <input asp-for="Name" class="form-control"  placeholder="Name" >
+                    <input asp-for="Name" class="form-control" placeholder="Name">
                     <span class="text-danger" asp-validation-for="Name"></span>
                 </div>
 
                 <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                <a asp-action="Index" asp-controller="Category" class="btn btn-light">Cancel</a>
+                <a asp-action="Index" asp-controller="Tag" class="btn btn-light">Cancel</a>
             </form>
         </div>
     </div>

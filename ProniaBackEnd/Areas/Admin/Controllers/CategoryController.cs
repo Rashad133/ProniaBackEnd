@@ -32,10 +32,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                 return View();
             }
 
-
-            //Office -- office
-            //office -- office
-
+            
             bool result = _db.Categories.Any(c=>c.Name.ToLower().Trim()==category.Name.ToLower().Trim());
 
             if(result)
@@ -48,7 +45,70 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             await _db.Categories.AddAsync(category);
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        //Get Update//
+        public async Task<IActionResult> Update(int id)
+        {
+            if (id <= 0) return BadRequest();
+
+            Category category = await _db.Categories.FirstOrDefaultAsync(c => c.Id == id);
+
+            if(category is null) return NotFound();
+
+            return View(category);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Update(int id,Category category)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            Category existed = await _db.Categories.FirstOrDefaultAsync(c => c.Id == id);
+
+            if (existed is null) return NotFound();
+
+            bool result = _db.Categories.Any(c=>c.Name==category.Name && c.Id!=id);
+
+            if (result)
+            {
+                ModelState.AddModelError("Name", "Bu adda category artiq var");
+                return View();
+            }
+
+            existed.Name = category.Name;
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));   
+
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (id <= 0) return BadRequest();
+
+            Category existed = await _db.Categories.FirstOrDefaultAsync(c=>c.Id == id);
+
+            if(existed is null) return NotFound();
+
+            _db.Categories.Remove(existed);
+
+            await _db.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+        public IActionResult Detail(int id)
+        {
+            if (id <= 0) return BadRequest();
+
+            Slide slide = _db.Slides.FirstOrDefault(s => s.Id == id);
+
+            if (slide is null) return NotFound();
+
+            return View(slide);
         }
     }
 }

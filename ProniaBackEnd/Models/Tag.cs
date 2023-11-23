@@ -6,7 +6,7 @@ namespace ProniaBackEnd.Models
     {
         public int Id { get; set; }
         [Required(ErrorMessage ="Ad daxil edin")]
-        [MaxLength(25,ErrorMessage ="Uzunlugu max 25 olamlidir")]
+        [MaxLength(25,ErrorMessage ="Uzunlugu max 25 olmalidir")]
         public string Name { get; set; }
         public List<ProductTag>? ProductTags { get; set; } 
 
