@@ -98,5 +98,17 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+        
+        public IActionResult Detail(int id)
+        {
+            if(id<=0) return BadRequest();
+
+            Tag tag = _db.Tags.FirstOrDefault(t => t.Id == id);
+
+            if (tag is null) return NotFound();
+
+            return View(tag);   
+            
+        }
     }
 }

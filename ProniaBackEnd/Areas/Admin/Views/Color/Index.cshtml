@@ -1,4 +1,4 @@
-﻿@model List<Category>
+﻿@model List<Color>
 
 @{
     int count = 0;
@@ -6,9 +6,9 @@
 <div class="col-lg-12 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">Category Table</h4>
+            <h4 class="card-title">Color Table</h4>
 
-            <a asp-controller="Category" asp-action="Create" class="btn btn-success">Create Category</a>
+            <a asp-controller="Color" asp-action="Create" class="btn btn-success">Create Color </a>
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
@@ -17,19 +17,15 @@
                                 No
                             </th>
                             <th>
-                                 Name
-                            </th>
-                             <th>
-                                Products Count
+                                Name
                             </th>
                             <th>
                                 Settings
                             </th>
-                           
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (Category category in Model)
+                        @foreach (Color color in Model)
                         {
                             count++;
                             <tr>
@@ -37,15 +33,15 @@
                                     @count
                                 </td>
                                 <td>
-                                    @category.Name
+                                    @color.Name
                                 </td>
                                 <td>
-                                    @category.Products.Count
+                                    @color.ProductColors
                                 </td>
                                 <td>
-                                    <a asp-action="update" asp-controller="category" asp-route-id="@category.Id" class="btn btn-warning btn-info"><i class="mdi mdi-grease-pencil"></i></a>
-                                    <a asp-action="delete" asp-controller="category" asp-route-id="@category.Id" class="btn btn-danger btn-info"><i class="mdi mdi-delete"></i></a>
-                                    <a asp-action="detail" asp-controller="category" asp-route-id="@category.Id" class="btn btn-primary btn-info"><i class="mdi mdi-open-in-new"></i></a>
+                                    <a asp-action="update" asp-controller="color" asp-route-id="@color.Id" class="btn btn-warning btn-info"><i class="mdi mdi-grease-pencil"></i></a>
+                                    <a asp-action="delete" asp-controller="color" asp-route-id="@color.Id" class="btn btn-danger btn-info"><i class="mdi mdi-delete"></i></a>
+                                    <a asp-action="detail" asp-controller="color" asp-route-id="@color.Id" class="btn btn-primary btn-info"><i class="mdi mdi-open-in-new"></i></a>
                                 </td>
                             </tr>
                         }

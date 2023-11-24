@@ -75,7 +75,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             bool result = _db.Categories.Any(c=>c.Name==category.Name && c.Id!=id);
 
             if (result)
-            {
+            {   
                 ModelState.AddModelError("Name", "Bu adda category artiq var");
                 return View();
             }
@@ -104,11 +104,11 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         {
             if (id <= 0) return BadRequest();
 
-            Slide slide = _db.Slides.FirstOrDefault(s => s.Id == id);
+            Category category = _db.Categories.FirstOrDefault(c => c.Id == id);
 
-            if (slide is null) return NotFound();
+            if (category is null) return NotFound();
 
-            return View(slide);
+            return View(category);
         }
     }
 }

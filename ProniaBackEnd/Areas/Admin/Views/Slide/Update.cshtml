@@ -2,13 +2,11 @@
 <div class="col-12 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">Create Slide </h4>
+            <h4 class="card-title">Update Slide </h4>
 
             <form class="forms-sample" method="post" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label asp-for="Photo">Photo</label>
-                    <input asp-for="Photo" class="form-control"  placeholder="Photo" >
-                    <span class="text-danger" asp-validation-for="Photo"></span>
+                    <img src="~/assets/images/slider/@Model.Image" />
                 </div>
                 <div class="form-group">
                     <label asp-for="Title">Title</label>
@@ -19,7 +17,7 @@
                     <label asp-for="SubTitle">SubTitle</label>
                     <input asp-for="SubTitle" class="form-control" placeholder="SubTitle">
                     <span class="text-danger" asp-validation-for="SubTitle"></span>
-                </div>  
+                </div>
                 <div class="form-group">
                     <label asp-for="Order">Order</label>
                     <input asp-for="Order" class="form-control" placeholder="Order">
@@ -36,4 +34,4 @@
             </form>
         </div>
     </div>
-</div>
+</div>  
