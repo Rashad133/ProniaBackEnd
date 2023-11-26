@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProniaBackEnd.Areas.Admin.ViewModels;
 using ProniaBackEnd.DAL;
 using ProniaBackEnd.Models;
 
@@ -15,7 +16,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            List<Color> colors = await _db.Colors.Include(c => c.ProductColors).ToListAsync();
+            List<Color> colors = await _db.Colors.Include(c=>c.ProductColors).ToListAsync();
             return View(colors);
         }
 
@@ -25,20 +26,25 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Color color)
+        public async Task<IActionResult> Create(CreateColorVM colorVM)
         {
             if (!ModelState.IsValid)
             {
-                return View(color);
+                return View(colorVM);
             }
 
-            bool result = _db.Colors.Any(c => c.Name.ToLower().Trim() == color.Name.ToLower().Trim());
+            bool result = _db.Colors.Any(c => c.Name.ToLower().Trim() == colorVM.Name.ToLower().Trim());
 
             if (result)
             {
                 ModelState.AddModelError("Color.Name", "Bu adda reng movcuddur");
-                return View(color);
+                return View(colorVM);
             }
+
+            Color color = new Color
+            {
+                Name= colorVM.Name
+            };
 
             await _db.Colors.AddAsync(color);
             await _db.SaveChangesAsync();
@@ -55,29 +61,34 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
 
             if (color is null) return NotFound();
 
-            return View(color);
+            UpdateColorVM colorVM = new UpdateColorVM
+            {
+                Name = color.Name
+            };
+
+            return View(colorVM);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(int id, Color color)
+        public async Task<IActionResult> Update(int id, UpdateColorVM colorVM)
         {
             if (!ModelState.IsValid)
             {
-                return View();
+                return View(colorVM);
             }
 
-            Color existed = await _db.Colors.FirstOrDefaultAsync(t => t.Id == id);
+            Color existed = await _db.Colors.Include(c=>c.ProductColors).FirstOrDefaultAsync(c => c.Id == id);
             if (existed is null) return NotFound();
 
-            bool result = _db.Colors.Any(t => t.Name == color.Name);
+            bool result = _db.Colors.Any(c => c.Name == colorVM.Name);
 
             if (result)
             {
                 ModelState.AddModelError("Name", "Bu adda artiq color var");
-                return View();
+                return View(colorVM);
             }
 
-            existed.Name = color.Name;
+            existed.Name = colorVM.Name;
             await _db.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
@@ -92,8 +103,8 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             if (existed is null) return NotFound();
 
             _db.Colors.Remove(existed);
-
             await _db.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
         public IActionResult Detail(int id)

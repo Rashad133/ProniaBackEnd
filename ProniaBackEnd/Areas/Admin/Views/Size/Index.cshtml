@@ -1,4 +1,4 @@
-﻿@model List<Color>
+﻿@model List<Size>
 
 @{
     int count = 0;
@@ -6,9 +6,9 @@
 <div class="col-lg-12 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">Color Table</h4>
+            <h4 class="card-title">Size Table</h4>
 
-            <a asp-controller="Color" asp-action="Create" class="btn btn-success">Create Color </a>
+            <a asp-controller="Size" asp-action="Create" class="btn btn-success">Create Size </a>
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
@@ -25,7 +25,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (Color color in Model)
+                        @foreach (Size size in Model)
                         {
                             count++;
                             <tr>
@@ -33,15 +33,15 @@
                                     @count
                                 </td>
                                 <td>
-                                    @color.Name
+                                    @size.Name
                                 </td>
                                 <td>
-                                    @color.ProductColors.Count
+                                    @size.ProductSizes.Count
                                 </td>
                                 <td>
-                                    <a asp-action="update" asp-controller="color" asp-route-id="@color.Id" class="btn btn-warning btn-info"><i class="mdi mdi-grease-pencil"></i></a>
-                                    <a asp-action="delete" asp-controller="color" asp-route-id="@color.Id" class="btn btn-danger btn-info"><i class="mdi mdi-delete"></i></a>
-                                    <a asp-action="detail" asp-controller="color" asp-route-id="@color.Id" class="btn btn-primary btn-info"><i class="mdi mdi-open-in-new"></i></a>
+                                    <a asp-action="update" asp-controller="size" asp-route-id="@size.Id" class="btn btn-warning btn-info"><i class="mdi mdi-grease-pencil"></i></a>
+                                    <a asp-action="delete" asp-controller="size" asp-route-id="@size.Id" class="btn btn-danger btn-info"><i class="mdi mdi-delete"></i></a>
+                                    <a asp-action="detail" asp-controller="size" asp-route-id="@size.Id" class="btn btn-primary btn-info"><i class="mdi mdi-open-in-new"></i></a>
                                 </td>
                             </tr>
                         }

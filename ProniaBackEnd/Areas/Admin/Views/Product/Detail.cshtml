@@ -1,0 +1,42 @@
+﻿@model Product
+@* <div class="col-6">
+    <img src="~/assets/images/website-images/@Model.Image" style="width:200px; height:200px;object-fit:cover" />
+    <h2>@Model.Name</h2>
+    <p>@Model.Price</p>
+    <p>@Model.SKU</p>
+    <p>@Model.Description</p>
+    <a class="btn btn-secondary" asp-controller="Size" asp-action="Index">Go Back</a>
+</div> *@
+<div class="card" style="width:18rem;max-height: 500px; ">
+        <img src="~/assets/images/website-images/@Model.Image" style="width:200px; height:200px;object-fit:cover" />
+
+    <div class="card-body">
+        <h5 class="card-title">@Model.Name</h5>
+        <p>@Model.Price</p>
+        <p>@Model.SKU</p>
+        <p>@Model.Description</p>
+        <p>
+            @foreach (ProductColor pColor in Model.ProductColors)
+            {
+                <option value="@pColor.Color.Name">@pColor.Color.Name</option>
+            }
+        </p>
+        <p>
+            @foreach (ProductSize pSize in Model.ProductSizes)
+            {
+                <option value="@pSize.Size.Name">@pSize.Size.Name</option>
+            }
+        </p>
+        <p>
+            @foreach (ProductTag pTag in Model.ProductTags)
+            {
+                <option value="@pTag.Tag.Name">@pTag.Tag.Name</option>
+            }
+        </p>
+        
+    </div>
+    <div class="card-body">
+        <a class="btn btn-secondary" asp-controller="Size" asp-action="Index">Go Back</a>
+    </div>
+    
+</div>

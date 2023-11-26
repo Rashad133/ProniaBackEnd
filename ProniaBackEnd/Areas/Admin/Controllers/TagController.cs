@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProniaBackEnd.Areas.Admin.ViewModels;
 using ProniaBackEnd.DAL;
 using ProniaBackEnd.Models;
+using System.Drawing;
 
 namespace ProniaBackEnd.Areas.Admin.Controllers
 {
@@ -26,7 +28,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Create(Tag tag)
+        public async Task<IActionResult> Create(CreateTagVM tagVM)
         {
             if (!ModelState.IsValid)
             {
@@ -34,12 +36,17 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             }
 
 
-            bool result =  _db.Tags.Any(t=>t.Name.ToLower().Trim()== tag.Name.ToLower().Trim());
+            bool result =  _db.Tags.Any(t=>t.Name== tagVM.Name);
             if (result)
             {
                 ModelState.AddModelError("Name", "Bele bir tag movcuddur");
                 return View();
             }
+
+            Tag tag = new Tag
+            {
+                Name = tagVM.Name
+            };
 
             await _db.Tags.AddAsync(tag);
             await _db.SaveChangesAsync();
@@ -57,11 +64,16 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
 
             if (tag is null) return NotFound();
 
-            return View(tag);
+            UpdateTagVM tagVM = new UpdateTagVM
+            {
+                Name = tag.Name
+            };
+
+            return View(tagVM);         
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(int id,Tag tag)
+        public async Task<IActionResult> Update(int id,UpdateTagVM tagVM)
         {
             if(!ModelState.IsValid)
             {
@@ -71,15 +83,15 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             Tag existed =await _db.Tags.FirstOrDefaultAsync(t=>t.Id==id);
             if (existed is null) return NotFound();
 
-            bool result = _db.Tags.Any(t => t.Name == tag.Name);
+            bool result = _db.Tags.Any(t => t.Name.ToLower().Trim() == tagVM.Name.ToLower().Trim());
 
             if (result)
             {
                 ModelState.AddModelError("Name", "Bu adda artiq tag var");
-                return View();
+                return View(tagVM);
             }
 
-            existed.Name=tag.Name;
+            existed.Name=tagVM.Name;
             await _db.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));

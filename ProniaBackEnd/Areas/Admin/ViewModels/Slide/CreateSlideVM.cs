@@ -1,22 +1,20 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ProniaBackEnd.Models
+namespace ProniaBackEnd.Areas.Admin.ViewModels
 {
-    public class Slide
+    public class CreateSlideVM
     {
-        public int Id { get; set; }
+        
         [Required]
-        [MaxLength(25, ErrorMessage = "Uzunlugu max 30 olmalidir")]
+        
         public string Title { get; set; }
         public string SubTitle { get; set; }
 
         public string Description { get; set; }
-        public string? Image { get; set; }
+        public string Image { get; set; }
         public string Order { get; set; }
-        [NotMapped]
-
+        [Required]
+        
         public IFormFile? Photo { get; set; }
-
     }
 }

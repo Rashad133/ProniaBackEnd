@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProniaBackEnd.Areas.Admin.ViewModels;
 using ProniaBackEnd.DAL;
 using ProniaBackEnd.Models;
 using ProniaBackEnd.Utilities.Extensions;
@@ -29,26 +30,40 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Slide slide)
+        public async Task<IActionResult> Create(CreateSlideVM slideVM)
         {
-            if (slide.Photo is null)
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("Photo", "Sekil secilmelidir");
                 return View();
             }
-            if (!slide.Photo.ValidateType("image/"))
+
+            //if (slideVM.Photo is null)
+            //{
+            //    ModelState.AddModelError("Photo", "Sekil secilmelidir");
+            //    return View();
+            //}
+            if (!slideVM.Photo.ValidateType("image/"))
             {
                 ModelState.AddModelError("Photo", "File tipi uygun deyil ");
                 return View();
             }
-            if (slide.Photo.ValidateSize(2*1024))
+            if (slideVM.Photo.ValidateSize(2*1024))
             {
                 ModelState.AddModelError("Photo", "Sekil 2mb-dan boyuk olmamalidir");
                 return View();
             }
 
             
-            slide.Image = await slide.Photo.CreateFile(_env.WebRootPath,"assets","images","slider");
+            string fileName = await slideVM.Photo.CreateFile(_env.WebRootPath,"assets","images","slider");
+
+            Slide slide = new Slide
+            {
+                Image = fileName,
+                Title = slideVM.Title,
+                SubTitle = slideVM.SubTitle,
+                Description = slideVM.Description,
+                Order = slideVM.Order
+            };
 
 
             await _db.Slides.AddAsync(slide);
@@ -66,45 +81,54 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
 
             if (existed is null) return NotFound();
 
-            return View(existed);
+            UpdateSlideVM slideVM = new UpdateSlideVM
+            {
+                Image = existed.Image,
+                Title = existed.Title,
+                SubTitle = existed.SubTitle,
+                Description = existed.Description,
+                Order = existed.Order
+            };
+
+            return View(slideVM);
         }
         [HttpPost]
-        public async Task<IActionResult> Update(int id, Slide slide)
+        public async Task<IActionResult> Update(int id, UpdateSlideVM slideVM)
         {
 
+            
+            if (!ModelState.IsValid)
+            {
+                return View(slideVM);
+            }
             Slide existed = await _db.Slides.FirstOrDefaultAsync(s => s.Id == id);
 
             if (existed is null) return NotFound();
-            if (!ModelState.IsValid)
-            {
-                return View(existed);
-            }
 
 
-
-            if (slide.Photo is not null)
+            if (slideVM.Photo is not null)
             {
 
-                if (!slide.Photo.ValidateType("image/"))
+                if (!slideVM.Photo.ValidateType("image/"))
                 {
                     ModelState.AddModelError("Photo", "File tipi uygun deyil ");
-                    return View(existed);
+                    return View(slideVM);
                 }
-                if (slide.Photo.ValidateSize(2 * 1024))
+                if (slideVM.Photo.ValidateSize(2 * 1024))
                 {
                     ModelState.AddModelError("Photo", "Sekil 2mb-dan boyuk olmamalidir");
-                    return View(existed);
+                    return View(slideVM);
                 }
 
-                string newImage = await slide.Photo.CreateFile(_env.WebRootPath, "assets", "images", "slider");
+                string newImage = await slideVM.Photo.CreateFile(_env.WebRootPath, "assets", "images", "slider");
                 existed.Image.DeleteFile(_env.WebRootPath, "assets", "images", "slider");
                 existed.Image = newImage;
 
             }
-            existed.Title = slide.Title;
-            existed.Description = slide.Description;    
-            existed.SubTitle = slide.SubTitle;
-            existed.Order = slide.Order;
+            existed.Title = slideVM.Title;
+            existed.Description = slideVM.Description;    
+            existed.SubTitle = slideVM.SubTitle;
+            existed.Order = slideVM.Order;
 
             await _db.SaveChangesAsync();
 

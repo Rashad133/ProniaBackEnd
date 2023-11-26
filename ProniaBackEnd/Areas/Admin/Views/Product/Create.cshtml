@@ -1,0 +1,50 @@
+﻿@model CreateProductVM
+
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Create Product </h4>
+
+            <form class="forms-sample" method="post" enctype="multipart/form-data">
+
+                <div class="form-group">
+                    <label asp-for="Image">Image</label>
+                    <input class="form-control" placeholder="Photo" type="file" data-val="true" id="Photo" name="Photo">
+                    <span class="text-danger" asp-validation-for="Image"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" placeholder="Name">
+                    <span class="text-danger" asp-validation-for="Name"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Price"></label>
+                    <input asp-for="Price" class="form-control" placeholder="Price">
+                    <span class="text-danger" asp-validation-for="Price"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SKU">SKU</label>
+                    <input asp-for="SKU" class="form-control" placeholder="SKU">
+                    <span class="text-danger" asp-validation-for="SKU"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description">Description</label>
+                    <input asp-for="Description" class="form-control" placeholder="Description">
+                    <span class="text-danger" asp-validation-for="Description"></span>
+                </div>
+                <div class="form-group">
+
+                    <label asp-for="CategoryId">Category</label>
+                    <select asp-for="CategoryId" asp-items="new SelectList(ViewBag.Categories,nameof(Category.Id),nameof(Category.Name))" class="form-control">
+                        <option selected disabled>Choose Category</option>
+                    </select>
+                    
+                    <span class="text-danger" asp-validation-for="CategoryId"></span>
+
+                </div>
+                <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                <a asp-action="Index" asp-controller="Product" class="btn btn-light">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
