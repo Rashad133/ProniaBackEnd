@@ -48,6 +48,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                 return View();
             }
 
+
             Product product = new Product
             {
                 Name= productVM.Name,
@@ -71,6 +72,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             if (id <= 0) return BadRequest();
 
             Product product = _db.Products
+                .Include(p=>p.Category)
                 .Include(p=>p.ProductColors)
                 .ThenInclude(p=>p.Color)
                 .Include(p=>p.ProductSizes)

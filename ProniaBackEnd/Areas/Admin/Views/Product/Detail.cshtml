@@ -7,7 +7,7 @@
     <p>@Model.Description</p>
     <a class="btn btn-secondary" asp-controller="Size" asp-action="Index">Go Back</a>
 </div> *@
-<div class="card" style="width:18rem;max-height: 500px; ">
+<div class="card" style="width:18rem;max-height: 600px; ">
         <img src="~/assets/images/website-images/@Model.Image" style="width:200px; height:200px;object-fit:cover" />
 
     <div class="card-body">
@@ -15,6 +15,7 @@
         <p>@Model.Price</p>
         <p>@Model.SKU</p>
         <p>@Model.Description</p>
+        <p>@Model.Category.Name</p>
         <p>
             @foreach (ProductColor pColor in Model.ProductColors)
             {
