@@ -8,5 +8,6 @@
 
         public Product Product { get; set; }
         public Tag Tag { get; set; }
+        public int SizeId { get; internal set; }
     }
 }

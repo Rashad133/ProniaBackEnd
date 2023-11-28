@@ -1,4 +1,4 @@
-﻿@model CreateProductVM
+﻿@model UpdateProductVM
 
 <div class="main-panel">
     <div class="content-wrapper">
@@ -7,7 +7,7 @@
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Create Product</h4>
+                        <h4 class="card-title">Update Product</h4>
 
                         <form class="forms-sample" method="post" enctype="multipart/form-data">
 
@@ -35,8 +35,9 @@
                                 <label asp-for="CategoryId">Category</label>
 
                                 <select asp-for="CategoryId" asp-items="new SelectList(Model.Categories,nameof(Category.Id),nameof(Category.Name))" class="form-control">
-                                    <option selected disabled>Choose Category</option>
+                                    
                                 </select>
+
                                 <span class="text-danger" asp-validation-for="CategoryId"></span>
                             </div>
 
@@ -44,8 +45,8 @@
                                 <label asp-for="TagIds">Tags</label>
 
                                 <select asp-for="TagIds" asp-items="new SelectList(Model.Tags,nameof(Tag.Id),nameof(Tag.Name))" class="form-control">
-                                   
                                 </select>
+
                                 <span class="text-danger" asp-validation-for="TagIds"></span>
                             </div>
 
@@ -54,6 +55,7 @@
 
                                 <select asp-for="ColorIds" asp-items="new SelectList(Model.Colors,nameof(Color.Id),nameof(Color.Name))" class="form-control">
                                 </select>
+
                                 <span class="text-danger" asp-validation-for="ColorIds"></span>
                             </div>
 
@@ -62,11 +64,14 @@
 
                                 <select asp-for="SizeIds" asp-items="new SelectList(Model.Sizes,nameof(Size.Id),nameof(Size.Name))" class="form-control">
                                 </select>
+
                                 <span class="text-danger" asp-validation-for="SizeIds"></span>
                             </div>
 
+
+
                             <button type="submit" class="btn btn-primary me-2">Submit</button>
-                            <a asp-action="index"  class="btn btn-light">Cancel</a>
+                            <a asp-action="index" asp-controller="product" class="btn btn-light">Cancel</a>
                         </form>
                     </div>
                 </div>
