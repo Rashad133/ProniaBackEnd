@@ -113,7 +113,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                 productVM.Colors = await _db.Colors.ToListAsync();
                 productVM.Sizes = await _db.Sizes.ToListAsync();
                 ModelState.AddModelError("MainPhoto", "fayl tipi uygun deyil");
-                return View();
+                return View(productVM);
             }
             if (!productVM.MainPhoto.ValidateSize(600))
             {
@@ -122,7 +122,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                 productVM.Colors = await _db.Colors.ToListAsync();
                 productVM.Sizes = await _db.Sizes.ToListAsync();
                 ModelState.AddModelError("HoverPhoto", "Fayl olcusu uygun deyil");
-                return View();
+                return View(productVM);
             }
 
             if (productVM.HoverPhoto.ValidateType("image/"))
@@ -132,7 +132,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                 productVM.Colors = await _db.Colors.ToListAsync();
                 productVM.Sizes = await _db.Sizes.ToListAsync();
                 ModelState.AddModelError("HoverPhoto", "fayl tipi uygun deyil");
-                return View();
+                return View(productVM);
             }
             if (productVM.HoverPhoto.ValidateSize(600))
             {
@@ -141,7 +141,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                 productVM.Colors = await _db.Colors.ToListAsync();
                 productVM.Sizes = await _db.Sizes.ToListAsync();
                 ModelState.AddModelError("HoverPhoto", "fayl olcusu uygun deyil");
-                return View();
+                return View(productVM);
             }
 
             ProductImage image = new ProductImage
@@ -252,11 +252,17 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         {
             if(id<=0) return BadRequest();
 
-            Product existed = await _db.Products.FirstOrDefaultAsync(p=> p.Id == id);
+            Product product = await _db.Products.Include(p=>p.ProductImages).FirstOrDefaultAsync(p=> p.Id == id);
 
-            if(existed is null) return NotFound();
+            if(product is null) return NotFound();
 
-            _db.Products.Remove(existed);
+            foreach (ProductImage image in product.ProductImages)
+            {
+                image.Url.DeleteFile(_env.WebRootPath, "assets", "images", "website-images");
+            }
+
+
+            _db.Products.Remove(product);
             await _db.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
@@ -266,7 +272,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         {
             if(id<=0) return BadRequest();
 
-            Product product = await _db.Products.Include(p=>p.ProductTags).Include(p=>p.ProductColors).Include(p=>p.ProductSizes).FirstOrDefaultAsync(p=>p.Id==id);
+            Product product = await _db.Products.Include(p=>p.ProductImages).Include(p=>p.ProductTags).Include(p=>p.ProductColors).Include(p=>p.ProductSizes).FirstOrDefaultAsync(p=>p.Id==id);
 
             if(product is null) return NotFound();
 
@@ -280,6 +286,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                 TagIds=product.ProductTags.Select(pt=>pt.TagId).ToList(), 
                 ColorIds=product.ProductColors.Select(pt=>pt.ColorId).ToList(),
                 SizeIds=product.ProductSizes.Select(pt=>pt.SizeId).ToList(),
+                ProductImages=product.ProductImages,
                 Categories= await _db.Categories.ToListAsync(),
                 Tags= await _db.Tags.ToListAsync(),
                 Colors= await _db.Colors.ToListAsync(),
@@ -293,6 +300,8 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
 
         public async Task<IActionResult> Update(int id,UpdateProductVM productVM)
         {
+            Product existed = await _db.Products.Include(pi=>pi.ProductImages).Include(p => p.ProductTags).Include(p => p.ProductColors).Include(p => p.ProductSizes).FirstOrDefaultAsync(p => p.Id == id);
+            productVM.ProductImages = existed.ProductImages;
             if (!ModelState.IsValid)
             {
                 productVM.Categories= await _db.Categories.ToListAsync();
@@ -302,8 +311,6 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
 
                 return View(productVM);
             }
-
-            Product existed = await   _db.Products.Include(p=>p.ProductTags).Include(p=>p.ProductColors).Include(p=>p.ProductSizes).FirstOrDefaultAsync(p=>p.Id==id);
 
             if (existed is null) return NotFound();
 
@@ -317,6 +324,52 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                 ModelState.AddModelError("CategoryId", "Bele category yoxdur");
                 return View(productVM);
             }
+
+            if(productVM.MainPhoto is not null)
+            {
+                if (!productVM.MainPhoto.ValidateType("image/"))
+                {
+                    productVM.Categories = await _db.Categories.ToListAsync();
+                    productVM.Tags = await _db.Tags.ToListAsync();
+                    productVM.Colors = await _db.Colors.ToListAsync();
+                    productVM.Sizes = await _db.Sizes.ToListAsync();
+                    ModelState.AddModelError("MainPhoto", "file novu uyugn deyil");
+                    return View(productVM);
+                }
+                if (productVM.MainPhoto.ValidateSize(600))
+                { 
+                    productVM.Categories = await _db.Categories.ToListAsync();
+                    productVM.Tags = await _db.Tags.ToListAsync();
+                    productVM.Colors = await _db.Colors.ToListAsync();
+                    productVM.Sizes = await _db.Sizes.ToListAsync();
+                    ModelState.AddModelError("Main", "file olcusu uygun deyil");
+                    return View(productVM);
+                }
+            }
+
+            if(productVM.HoverPhoto is not null)
+            {
+                if (!productVM.HoverPhoto.ValidateType("image/"))
+                {
+                    productVM.Categories = await _db.Categories.ToListAsync();
+                    productVM.Tags = await _db.Tags.ToListAsync();
+                    productVM.Colors = await _db.Colors.ToListAsync();
+                    productVM.Sizes = await _db.Sizes.ToListAsync();
+                    ModelState.AddModelError("HoverPhoto", "file tipi uyugn deyil");
+                    return View(productVM);
+                }
+                if (!productVM.HoverPhoto.ValidateSize(600))
+                {
+                    productVM.Categories = await _db.Categories.ToListAsync();
+                    productVM.Tags = await _db.Tags.ToListAsync();
+                    productVM.Colors = await _db.Colors.ToListAsync();
+                    productVM.Sizes = await _db.Sizes.ToListAsync();
+                    ModelState.AddModelError("HoverPhoto", "file olcusu uygun deyil");
+                    return View(productVM);
+                }
+            }
+
+            
 
             //List<ProductTag> removeable = existed.ProductTags.Where(pt => !productVM.TagIds.Exists(tId => tId == pt.TagId)).ToList();
             //_db.ProductTags.RemoveRange(removeable);
@@ -335,7 +388,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                     productVM.Colors = await _db.Colors.ToListAsync();
                     productVM.Sizes = await _db.Sizes.ToListAsync();
                     ModelState.AddModelError("CategoryId", "Bele tag yoxdur");
-                    return View();
+                    return View(productVM);
                 }
                 existed.ProductTags.Add(new ProductTag
                 {
@@ -386,6 +439,72 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                 }
             }
 
+            if (productVM.MainPhoto is not null)
+            {
+                string fileName = await productVM.MainPhoto.CreateFile(_env.WebRootPath, "assets", "images", "websites-images");
+
+                ProductImage mainImage = existed.ProductImages.FirstOrDefault(pi => pi.IsPrimary == true);
+                mainImage.Url.DeleteFile(_env.WebRootPath, "assets", "images", "website-images");
+                _db.ProductImages.Remove(mainImage);
+
+                existed.ProductImages.Add(new ProductImage
+                {
+                    Alternative = productVM.Name,
+                    IsPrimary = true,
+                    Url = fileName,
+                });
+            }
+
+            if (productVM.HoverPhoto is not null)
+            {
+                string fileName = await productVM.HoverPhoto.CreateFile(_env.WebRootPath, "assets", "images", "websites-images");
+
+                ProductImage hoverImage = existed.ProductImages.FirstOrDefault(pi => pi.IsPrimary == false);
+                hoverImage.Url.DeleteFile(_env.WebRootPath, "assets", "images", "website-images");
+                _db.ProductImages.Remove(hoverImage);
+
+                existed.ProductImages.Add(new ProductImage
+                {
+                    Alternative = productVM.Name,
+                    IsPrimary = false,
+                    Url = fileName,
+                });
+            }
+            if(productVM.ImageIds is null)
+            {
+                productVM.ImageIds = new List<int>();
+            }
+            List<ProductImage> removeable = existed.ProductImages.Where(pi => !productVM.ImageIds.Exists(imgId => imgId == pi.Id) && pi.IsPrimary == null).ToList();
+            foreach (ProductImage pImage in removeable)
+            {
+                pImage.Url.DeleteFile(_env.WebRootPath, "assets", "images", "website-images");
+                existed.ProductImages.Remove(pImage);
+            }
+
+            TempData["Message"] = "";
+            if (productVM.Photos is not null)
+            {
+                foreach (IFormFile photo in productVM.Photos )
+                {
+                    if (!photo.ValidateType("image/"))
+                    {
+                        TempData["Message"] += $"<p class=\"text-danger\">{photo.FileName} file tipi uygun deyil</p>";
+                        continue;
+                    }
+                    if (!photo.ValidateSize(600))
+                    {
+                        TempData["Message"] += $"<p class=\"text-danger\">{photo.FileName} file olcusu uygun deyil</p>";
+                        continue;
+                    }
+                    existed.ProductImages.Add(new ProductImage
+                    {
+                        Alternative = productVM.Name,
+                        IsPrimary = null,
+                        Url = await photo.CreateFile(_env.WebRootPath, "assets", "image", "website-iamges")
+                    });
+                }
+            }
+            
 
             existed.Name = productVM.Name;
             existed.Description = productVM.Description;

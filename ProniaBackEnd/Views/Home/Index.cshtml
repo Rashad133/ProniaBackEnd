@@ -1904,10 +1904,10 @@
                                         <a href="shop.html">
 
                                             <img class="primary-img"
-                                                 src="~/assets/images/website-images//@product.ProductImages.FirstOrDefault(pi=>pi.IsPrimary==true).Url"
+                                                 src="~/assets/images/website-images//@product.ProductImages.FirstOrDefault(pi=>pi.IsPrimary==true)?.Url"
                                                  alt="@product.Name" />
                                             <img class="secondary-img"
-                                                 src="~/assets/images/website-images//@product.ProductImages.FirstOrDefault(pi=>pi.IsPrimary==false).Url"
+                                                 src="~/assets/images/website-images//@product.ProductImages.FirstOrDefault(pi=>pi.IsPrimary==false)?.Url"
                                                  alt="@product.Name" />
                                         </a>
                                         <div class="product-add-action">
