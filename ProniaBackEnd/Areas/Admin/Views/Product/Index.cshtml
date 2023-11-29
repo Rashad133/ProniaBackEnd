@@ -8,7 +8,10 @@
         <div class="card-body">
             <h4 class="card-title">Product Table</h4>
 
-            <a asp-controller="Product" asp-action="Create" class="btn btn-success">Create Product </a>
+            
+            <a asp-controller="Product" asp-action="Create" class="btn btn-success">Create Product </a><br>
+            
+            @Html.Raw(TempData["Messgae"])
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>

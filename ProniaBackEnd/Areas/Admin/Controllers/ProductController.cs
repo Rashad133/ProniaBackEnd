@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ProniaBackEnd.Areas.Admin.ViewModels;
 using ProniaBackEnd.DAL;
 using ProniaBackEnd.Models;
+using ProniaBackEnd.Utilities.Extensions;
 
 namespace ProniaBackEnd.Areas.Admin.Controllers
 {
@@ -10,9 +11,11 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         private readonly AppDbContext _db;
-        public ProductController(AppDbContext db)
+        private readonly IWebHostEnvironment _env;
+        public ProductController(AppDbContext db,IWebHostEnvironment env)
         {
             _db = db;
+            _env = env;
         }
         public async Task<IActionResult> Index()
         {
@@ -103,6 +106,56 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                 }
             }
 
+            if (!productVM.MainPhoto.ValidateType("image/"))
+            {
+                productVM.Categories = await _db.Categories.ToListAsync();
+                productVM.Tags = await _db.Tags.ToListAsync();
+                productVM.Colors = await _db.Colors.ToListAsync();
+                productVM.Sizes = await _db.Sizes.ToListAsync();
+                ModelState.AddModelError("MainPhoto", "fayl tipi uygun deyil");
+                return View();
+            }
+            if (!productVM.MainPhoto.ValidateSize(600))
+            {
+                productVM.Categories = await _db.Categories.ToListAsync();
+                productVM.Tags = await _db.Tags.ToListAsync();
+                productVM.Colors = await _db.Colors.ToListAsync();
+                productVM.Sizes = await _db.Sizes.ToListAsync();
+                ModelState.AddModelError("HoverPhoto", "Fayl olcusu uygun deyil");
+                return View();
+            }
+
+            if (productVM.HoverPhoto.ValidateType("image/"))
+            {
+                productVM.Categories = await _db.Categories.ToListAsync();
+                productVM.Tags = await _db.Tags.ToListAsync();
+                productVM.Colors = await _db.Colors.ToListAsync();
+                productVM.Sizes = await _db.Sizes.ToListAsync();
+                ModelState.AddModelError("HoverPhoto", "fayl tipi uygun deyil");
+                return View();
+            }
+            if (productVM.HoverPhoto.ValidateSize(600))
+            {
+                productVM.Categories = await _db.Categories.ToListAsync();
+                productVM.Tags = await _db.Tags.ToListAsync();
+                productVM.Colors = await _db.Colors.ToListAsync();
+                productVM.Sizes = await _db.Sizes.ToListAsync();
+                ModelState.AddModelError("HoverPhoto", "fayl olcusu uygun deyil");
+                return View();
+            }
+
+            ProductImage image = new ProductImage
+            {
+                Alternative=productVM.Name,
+                IsPrimary = true,
+                Url=await productVM.MainPhoto.CreateFile(_env.WebRootPath,"assets","image","website-images ")
+            };
+            ProductImage hoverImage = new ProductImage
+            {
+                Alternative=productVM.Name,
+                IsPrimary=false,
+                Url=await productVM.HoverPhoto.CreateFile(_env.WebRootPath,"assets","image","website-images")
+            };
 
             Product product = new Product
             {
@@ -113,9 +166,11 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                 Description = productVM.Description,
                 ProductTags= new List<ProductTag>(),
                 ProductColors= new List<ProductColor>(),
-                ProductSizes= new List<ProductSize>()
+                ProductSizes= new List<ProductSize>(),
+                ProductImages= new List<ProductImage>() { image, hoverImage }
 
             };
+
 
 
             foreach (int tagId in productVM.TagIds)
@@ -145,6 +200,27 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                 product.ProductSizes.Add(productSize);
             }
 
+            TempData["Message"] = "";
+            foreach (IFormFile photo in productVM.Photos)
+            {
+                if (!photo.ValidateType("image/"))
+                {
+                    TempData["Message"] += $"<p class=\"text-danger\">{photo.FileName} file tipi uygun deyil</p>";
+                    continue;
+                }
+                if (!photo.ValidateSize(600))
+                {
+                    TempData["Message"] += $"<p class=\"text-danger\">{photo.FileName} file olcusu uygun deyil</p>";
+                    continue;
+                }
+                product.ProductImages.Add(new ProductImage
+                {
+                    Alternative=productVM.Name,
+                    IsPrimary=null,
+                    Url=await photo.CreateFile(_env.WebRootPath,"assets","image","website-iamges")
+                });
+            }
+
             await _db.Products.AddAsync(product);
             await _db.SaveChangesAsync();
 
@@ -164,6 +240,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                 .ThenInclude(p=>p.Size)
                 .Include(p=>p.ProductTags)
                 .ThenInclude(p=>p.Tag)
+                .Include(p=>p.ProductImages)
                 .FirstOrDefault(c => c.Id == id);
 
             if (product is null) return NotFound();
@@ -237,32 +314,35 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                 productVM.Tags = await _db.Tags.ToListAsync();
                 productVM.Colors=await _db.Colors.ToListAsync();
                 productVM.Sizes = await _db.Sizes.ToListAsync();
+                ModelState.AddModelError("CategoryId", "Bele category yoxdur");
                 return View(productVM);
             }
 
-            foreach (ProductTag pTag in existed.ProductTags)
+            //List<ProductTag> removeable = existed.ProductTags.Where(pt => !productVM.TagIds.Exists(tId => tId == pt.TagId)).ToList();
+            //_db.ProductTags.RemoveRange(removeable);
+
+            existed.ProductTags.RemoveAll(pt=>!productVM.TagIds.Exists(tId=>tId==pt.TagId));
+
+            List<int> creatable = productVM.TagIds.Where(tId => !existed.ProductTags.Exists(pt => pt.TagId == tId)).ToList();
+
+            foreach (int tagId in creatable)
             {
-                if (productVM.TagIds.Exists(tId => tId == pTag.TagId))
+                bool tagResult = await _db.Tags.AnyAsync(t => t.Id == tagId);
+                if(!tagResult)
                 {
-                    _db.ProductTags.Remove(pTag);
+                    productVM.Categories = await _db.Categories.ToListAsync();
+                    productVM.Tags = await _db.Tags.ToListAsync();
+                    productVM.Colors = await _db.Colors.ToListAsync();
+                    productVM.Sizes = await _db.Sizes.ToListAsync();
+                    ModelState.AddModelError("CategoryId", "Bele tag yoxdur");
+                    return View();
                 }
-            }
-
-            List<int> newTagIds = new List<int>();
-
-            foreach (int tagId in productVM.TagIds)
-            {
-                if (!existed.ProductTags.Any(pt=>pt.TagId==tagId))
+                existed.ProductTags.Add(new ProductTag
                 {
-                    existed.ProductTags.Add(new ProductTag
-                    {
-                        TagId=tagId
-                    });
-                }
+                    TagId=tagId
+                });
+                
             }
-
-
-
 
             foreach (ProductColor pColor in existed.ProductColors)
             {
@@ -285,9 +365,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                 }
             }
 
-
-
-            foreach(ProductSize pSize in existed.ProductSizes)
+            foreach (ProductSize pSize in existed.ProductSizes)
             {
                 if (productVM.SizeIds.Exists(sId => sId == pSize.SizeId))
                 {
@@ -296,7 +374,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             }
             List<int> newSizeIds = new List<int>();
 
-            foreach(int sizeId in productVM.SizeIds)
+            foreach (int sizeId in productVM.SizeIds)
             {
                 if (!_db.ProductSizes.Any(ps => ps.SizeId == sizeId))
                 {
@@ -307,7 +385,6 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
 
                 }
             }
-
 
 
             existed.Name = productVM.Name;

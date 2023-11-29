@@ -53,7 +53,7 @@
                                         </a>
                                     }
 
-                                    <a href="#" class="swiper-slide">
+                                    @* <a href="#" class="swiper-slide">
                                         <img class="img-full"
                                              src="~/assets/images/website-images/@Model.Product.Image"
                                              alt="Product Thumnail" />
@@ -72,7 +72,7 @@
                                         <img class="img-full"
                                              src="~/assets/images/website-images/1-4-570x633.jpg"
                                              alt="Product Thumnail" />
-                                    </a>
+                                    </a> *@
 
                                 </div>
                                 <!-- Add Arrows -->
@@ -503,10 +503,10 @@
                                     <div class="product-img">
                                         <a asp-controller="Product" asp-action="Detail" asp-all-route-id="product.id">
                                             <img class="primary-img"
-                                                 src="~/assets/images/website-images/@product.ProductImages.FirstOrDefault(pi=>pi.IsPrimary==true).Url"
+                                                 src="~/assets/images/website-images/@product.ProductImages.FirstOrDefault(pi=>pi.IsPrimary==true)?.Url"
                                                  alt="@product.Name" />
                                             <img class="secondary-img"`
-                                                 src="~/assets/images/website-images/@product.ProductImages.FirstOrDefault(pi=>pi.IsPrimary==false).Url"
+                                                 src="~/assets/images/website-images/@product.ProductImages.FirstOrDefault(pi=>pi.IsPrimary==false)?.Url"
                                                  alt="@product.Name" />
                                         </a>
                                         <div class="product-add-action">
