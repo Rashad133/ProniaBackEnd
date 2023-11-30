@@ -20,6 +20,8 @@ namespace ProniaBackEnd.DAL
         public DbSet<Size> Sizes { get; set; }
         public DbSet<ProductSize> ProductSizes { get; set; }
 
+        public DbSet<Settings> Settings { get; set; }
+
 
         
     }
