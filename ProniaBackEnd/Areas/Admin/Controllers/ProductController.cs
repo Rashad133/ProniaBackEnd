@@ -106,7 +106,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                 }
             }
 
-            if (!productVM.MainPhoto.ValidateType("image/"))
+            if (!productVM.MainPhoto.ValidateType())
             {
                 productVM.Categories = await _db.Categories.ToListAsync();
                 productVM.Tags = await _db.Tags.ToListAsync();
@@ -115,7 +115,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                 ModelState.AddModelError("MainPhoto", "fayl tipi uygun deyil");
                 return View(productVM);
             }
-            if (!productVM.MainPhoto.ValidateSize(600))
+            if (!productVM.MainPhoto.ValidateSize(5))
             {
                 productVM.Categories = await _db.Categories.ToListAsync();
                 productVM.Tags = await _db.Tags.ToListAsync();
@@ -125,7 +125,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                 return View(productVM);
             }
 
-            if (productVM.HoverPhoto.ValidateType("image/"))
+            if (!productVM.HoverPhoto.ValidateType())
             {
                 productVM.Categories = await _db.Categories.ToListAsync();
                 productVM.Tags = await _db.Tags.ToListAsync();
@@ -134,7 +134,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                 ModelState.AddModelError("HoverPhoto", "fayl tipi uygun deyil");
                 return View(productVM);
             }
-            if (productVM.HoverPhoto.ValidateSize(600))
+            if (!productVM.HoverPhoto.ValidateSize(5))
             {
                 productVM.Categories = await _db.Categories.ToListAsync();
                 productVM.Tags = await _db.Tags.ToListAsync();
@@ -148,13 +148,13 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             {
                 Alternative=productVM.Name,
                 IsPrimary = true,
-                Url=await productVM.MainPhoto.CreateFile(_env.WebRootPath,"assets","image","website-images ")
+                Url=await productVM.MainPhoto.CreateFile(_env.WebRootPath,"assets","images","website-images")
             };
             ProductImage hoverImage = new ProductImage
             {
                 Alternative=productVM.Name,
                 IsPrimary=false,
-                Url=await productVM.HoverPhoto.CreateFile(_env.WebRootPath,"assets","image","website-images")
+                Url=await productVM.HoverPhoto.CreateFile(_env.WebRootPath,"assets","images","website-images")
             };
 
             Product product = new Product
@@ -208,7 +208,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                     TempData["Message"] += $"<p class=\"text-danger\">{photo.FileName} file tipi uygun deyil</p>";
                     continue;
                 }
-                if (!photo.ValidateSize(600))
+                if (!photo.ValidateSize(5))
                 {
                     TempData["Message"] += $"<p class=\"text-danger\">{photo.FileName} file olcusu uygun deyil</p>";
                     continue;
@@ -217,7 +217,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                 {
                     Alternative=productVM.Name,
                     IsPrimary=null,
-                    Url=await photo.CreateFile(_env.WebRootPath,"assets","image","website-iamges")
+                    Url=await photo.CreateFile(_env.WebRootPath,"assets","images","website-images")
                 });
             }
 
@@ -327,7 +327,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
 
             if(productVM.MainPhoto is not null)
             {
-                if (!productVM.MainPhoto.ValidateType("image/"))
+                if (!productVM.MainPhoto.ValidateType())
                 {
                     productVM.Categories = await _db.Categories.ToListAsync();
                     productVM.Tags = await _db.Tags.ToListAsync();
@@ -336,7 +336,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                     ModelState.AddModelError("MainPhoto", "file novu uyugn deyil");
                     return View(productVM);
                 }
-                if (productVM.MainPhoto.ValidateSize(600))
+                if (productVM.MainPhoto.ValidateSize(5))
                 { 
                     productVM.Categories = await _db.Categories.ToListAsync();
                     productVM.Tags = await _db.Tags.ToListAsync();
@@ -349,7 +349,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
 
             if(productVM.HoverPhoto is not null)
             {
-                if (!productVM.HoverPhoto.ValidateType("image/"))
+                if (!productVM.HoverPhoto.ValidateType())
                 {
                     productVM.Categories = await _db.Categories.ToListAsync();
                     productVM.Tags = await _db.Tags.ToListAsync();
@@ -358,7 +358,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                     ModelState.AddModelError("HoverPhoto", "file tipi uyugn deyil");
                     return View(productVM);
                 }
-                if (!productVM.HoverPhoto.ValidateSize(600))
+                if (!productVM.HoverPhoto.ValidateSize(5))
                 {
                     productVM.Categories = await _db.Categories.ToListAsync();
                     productVM.Tags = await _db.Tags.ToListAsync();
@@ -486,12 +486,12 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             {
                 foreach (IFormFile photo in productVM.Photos )
                 {
-                    if (!photo.ValidateType("image/"))
+                    if (!photo.ValidateType())
                     {
                         TempData["Message"] += $"<p class=\"text-danger\">{photo.FileName} file tipi uygun deyil</p>";
                         continue;
                     }
-                    if (!photo.ValidateSize(600))
+                    if (!photo.ValidateSize(5))
                     {
                         TempData["Message"] += $"<p class=\"text-danger\">{photo.FileName} file olcusu uygun deyil</p>";
                         continue;
@@ -500,7 +500,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                     {
                         Alternative = productVM.Name,
                         IsPrimary = null,
-                        Url = await photo.CreateFile(_env.WebRootPath, "assets", "image", "website-iamges")
+                        Url = await photo.CreateFile(_env.WebRootPath, "assets", "images", "website-iamges")
                     });
                 }
             }

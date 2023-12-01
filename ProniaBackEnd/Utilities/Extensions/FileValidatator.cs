@@ -14,9 +14,9 @@ namespace ProniaBackEnd.Utilities.Extensions
             return false;
         }
 
-        public static bool ValidateSize(this IFormFile file,int limitkb)
+        public static bool ValidateSize(this IFormFile file,int limitmb)
         {
-            if (file.Length > limitkb * 1024)
+            if (file.Length > limitmb * 1024)
             {
                 return true;
             }
