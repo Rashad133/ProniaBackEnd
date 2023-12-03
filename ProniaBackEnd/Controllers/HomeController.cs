@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProniaBackEnd.DAL;
 using ProniaBackEnd.Models;
@@ -28,5 +29,26 @@ namespace ProniaBackEnd.Controllers
 
             return View(vm);
         }
+
+        //public IActionResult Test()
+        //{
+        //    Response.Cookies.Append("Score", "5-0",new CookieOptions
+        //    {
+        //        MaxAge=TimeSpan.FromSeconds(50)
+        //    });
+            
+        //    HttpContext.Session.SetString("Score2","6-1");
+            
+
+        //    return Ok();
+        //}
+
+        //public IActionResult GetCookie()
+        //{
+        //    string score= Request.Cookies["Score"];
+        //    string score2=HttpContext.Session.GetString("Score2");
+        //    return Content(score+" "+score2);
+
+        //}
     }
 }

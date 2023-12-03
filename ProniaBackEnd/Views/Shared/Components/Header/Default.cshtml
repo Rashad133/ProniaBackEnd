@@ -1,4 +1,11 @@
-﻿@model Dictionary<string,string>
+﻿
+@* @model Dictionary<string,string> *@
+
+@model HeaderVM
+
+@{
+    decimal total = 0;
+}
 
 <header class="main-header-area">
     <div class="header-top bg-pronia-primary d-none d-lg-block">
@@ -56,11 +63,11 @@
                     <div class="header-middle-wrap position-relative">
                         <div class="header-contact d-none d-lg-flex">
                             <i class="pe-7s-call"></i>
-                            <a href="tel://@Model["Phone"]">@Model["Phone"]</a>
+                            <a href="tel://@Model.Settings["Phone"]">@Model.Settings["Phone"]</a>
                         </div>
 
                         <a href="index.html" class="header-logo">
-                            <img src="~/assets/images/logo/@Model["Logo"]" alt="Header Logo" />
+                            <img src="~/assets/images/logo/@Model.Settings["Logo"]" alt="Header Logo" />
                         </a>
 
                         <div class="header-right">
@@ -71,7 +78,7 @@
                                        data-bs-toggle="modal"
                                        data-bs-target="#exampleModal">
 
-                                        @Html.Raw(Model["SearchIcon"])
+                                        @Html.Raw(Model.Settings["SearchIcon"])
                                     </a>
                                 </li>
                                 <li class="dropdown d-none d-lg-block">
@@ -101,7 +108,7 @@
                                 <li class="minicart-wrap me-3 me-lg-0">
                                     <a href="#miniCart" class="minicart-btn toolbar-btn">
                                         <i class="pe-7s-shopbag"></i>
-                                        <span class="quantity">3</span>
+                                        <span class="quantity">@Model.Items.Count</span>
                                     </a>
                                 </li>
                                 <li class="mobile-menu_wrap d-block d-lg-none">
@@ -250,7 +257,7 @@
                 <div class="row align-items-center">
                     <div class="col-lg-3 col-6">
                         <a href="index.html" class="header-logo">
-                            <img src="~/assets/images/logo/@Model["Logo"]" alt="Header Logo" />
+                            <img src="~/assets/images/logo/@Model.Settings["Logo"]" alt="Header Logo" />
                         </a>
                     </div>
                     <div class="col-lg-6 d-none d-lg-block">
@@ -412,7 +419,7 @@
                                 <li class="minicart-wrap me-3 me-lg-0">
                                     <a href="#miniCart" class="minicart-btn toolbar-btn">
                                         <i class="pe-7s-shopbag"></i>
-                                        <span class="quantity">3</span>
+                                        <span class="quantity">@Model.Items.Count</span>
                                     </a>
                                 </li>
                                 <li class="mobile-menu_wrap d-block d-lg-none">
@@ -436,7 +443,7 @@
                 </div>
                 <div class="header-contact offcanvas-contact">
                     <i class="pe-7s-call"></i>
-                    <a href="tel://@Model["Phone"]">@Model["Phone"]</a>
+                    <a href="tel://@Model.Settings["Phone"]">@Model.Settings["Phone"]</a>
                 </div>
                 <div class="offcanvas-user-info">
                     <ul class="dropdown-wrap">
@@ -751,7 +758,7 @@
                                     aria-label="searchbtn">
 
 
-                                @Html.Raw(Model["SearchIcon"])
+                                @Html.Raw(Model.Settings["SearchIcon"])
                             </button>
                         </form>
                     </div>
@@ -775,80 +782,40 @@
                     </a>
                 </div>
                 <ul class="minicart-list">
-                    <li class="minicart-product">
-                        <a class="product-item_remove" href="#">
-                            <i class="pe-7s-close"
-                               data-tippy="Remove"
-                               data-tippy-inertia="true"
-                               data-tippy-animation="shift-away"
-                               data-tippy-delay="50"
-                               data-tippy-arrow="true"
-                               data-tippy-theme="sharpborder"></i>
-                        </a>
-                        <a href="single-product-variable.html"
-                           class="product-item_img">
-                            <img class="img-full"
-                                 src="~/assets/images/product/small-size/2-1-70x78.png"
-                                 alt="Product Image" />
-                        </a>
-                        <div class="product-item_content">
-                            <a class="product-item_title"
-                               href="single-product-variable.html">American Marigold</a>
-                            <span class="product-item_quantity">1 x $23.45</span>
-                        </div>
-                    </li>
-                    <li class="minicart-product">
-                        <a class="product-item_remove" href="#">
-                            <i class="pe-7s-close"
-                               data-tippy="Remove"
-                               data-tippy-inertia="true"
-                               data-tippy-animation="shift-away"
-                               data-tippy-delay="50"
-                               data-tippy-arrow="true"
-                               data-tippy-theme="sharpborder"></i>
-                        </a>
-                        <a href="single-product-variable.html"
-                           class="product-item_img">
-                            <img class="img-full"
-                                 src="~/assets/images/product/small-size/2-2-70x78.png"
-                                 alt="Product Image" />
-                        </a>
-                        <div class="product-item_content">
-                            <a class="product-item_title"
-                               href="single-product-variable.html">Black Eyed Susan</a>
-                            <span class="product-item_quantity">1 x $25.45</span>
-                        </div>
-                    </li>
-                    <li class="minicart-product">
-                        <a class="product-item_remove" href="#">
-                            <i class="pe-7s-close"
-                               data-tippy="Remove"
-                               data-tippy-inertia="true"
-                               data-tippy-animation="shift-away"
-                               data-tippy-delay="50"
-                               data-tippy-arrow="true"
-                               data-tippy-theme="sharpborder"></i>
-                        </a>
-                        <a href="single-product-variable.html"
-                           class="product-item_img">
-                            <img class="img-full"
-                                 src="~/assets/images/product/small-size/2-3-70x78.png"
-                                 alt="Product Image" />
-                        </a>
-                        <div class="product-item_content">
-                            <a class="product-item_title"
-                               href="single-product-variable.html">Bleeding Heart</a>
-                            <span class="product-item_quantity">1 x $30.45</span>
-                        </div>
-                    </li>
+                    @foreach (BasketItemVM item in Model.Items)
+                    {
+                        total += item.SubTotal;
+                        <li class="minicart-product">
+                            <a class="product-item_remove" asp-action="RemoveBasket" asp-controller="Basket" asp-route-id="@item.Id">
+                                <i class="pe-7s-close"
+                                   data-tippy="Remove"
+                                   data-tippy-inertia="true"
+                                   data-tippy-animation="shift-away"
+                                   data-tippy-delay="50"
+                                   data-tippy-arrow="true"
+                                   data-tippy-theme="sharpborder"></i>
+                            </a>
+                            <a asp-action="detail" asp-controller="product" asp-route-id="@item.Id"
+                               class="product-item_img">
+                                <img class="img-full"
+                                     src="~/assets/images/website-images/@item.Image"
+                                     alt="Product Image" />
+                            </a>
+                            <div class="product-item_content">
+                                <a class="product-item_title"
+                                   asp-action="detail" asp-controller="product" asp-route-id="@item.Id">@item.Name</a>
+                                <span class="product-item_quantity">@item.Count x $@item.Price</span>
+                            </div>
+                        </li>
+                    }
                 </ul>
-            </div>
+            </div>  
             <div class="minicart-item_total">
-                <span>Subtotal</span>
+                <span>Total</span>
                 <span class="ammount">$79.35</span>
             </div>
             <div class="group-btn_wrap d-grid gap-2">
-                <a href="cart.html" class="btn btn-dark">View Cart</a>
+                <a asp-action="Index" asp-controller="Basket" class="btn btn-dark">View Cart</a>
                 <a href="checkout.html" class="btn btn-dark">Checkout</a>
             </div>
         </div>

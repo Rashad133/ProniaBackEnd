@@ -434,7 +434,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
                     existed.ProductSizes.Add(new ProductSize
                     {
                         SizeId = sizeId,
-                    });
+                    }); 
 
                 }
             }
