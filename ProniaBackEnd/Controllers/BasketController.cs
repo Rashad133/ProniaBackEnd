@@ -60,7 +60,7 @@ namespace ProniaBackEnd.Controllers
                 basket =JsonConvert.DeserializeObject<List<BasketCookieItemVM>>(Request.Cookies["Basket"]);
 
                 BasketCookieItemVM item = basket.FirstOrDefault(b=>b.Id==id);
-                if(Request.Cookies["Basket"] is null)
+                if(Request.Cookies["Basket"] is not  null)
                 {
                     
                     BasketCookieItemVM basketCookieItemVM = new BasketCookieItemVM
@@ -94,6 +94,8 @@ namespace ProniaBackEnd.Controllers
 
             return RedirectToAction(nameof(Index),"Home");
         }
+
+
         public async Task<IActionResult> GetBasket()
         {
 
