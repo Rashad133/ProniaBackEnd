@@ -8,7 +8,7 @@
             <div class="row h-100">
                 <div class="col-lg-12">
                     <div class="breadcrumb-item">
-                        <h2 class="breadcrumb-heading">Login & Register Page</h2>
+                        <h2 class="breadcrumb-heading"> Register</h2>
                         <ul>
                             <li>
                                 <a href="index.html">Home</a>
@@ -63,18 +63,16 @@
                                 </div>
                                     <div class=" form-check">
                                         <label>Gender</label><br />
-                                        <div class="col-md-6"> 
-                                            <input class="form-check-input" type="radio" asp-for="Gender" value="male"  />
-                                            <label class="form-check-label" for="maleradio">male</label>
-                                        </div>
-                                        <div col-md-6> 
-                                            <input class="form-check-input" type="radio" asp-for="Gender" value="female"  />
-                                            <label class="form-check-label" for="femaleradio">female</label>
+                                        <div class="col-md-6 d-flex"> 
+                                            <label for="maleradio">male</label>
+                                            <input  style="width:15px;" type="radio" asp-for="Gender" value="male"  />
+                                            <label  for="femaleradio">female</label>
+                                            <input  style="width:15px;" type="radio" asp-for="Gender" value="female" />
                                         </div>
                                         <span class="text-danger" asp-validation-for="Gender"></span>
-                                    </div>
+                                    </div>  
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-custom-size lg-size btn-pronia-primary">
+                                    <button type="submit" class="btn btn-custom-size lg-size btn-pronia-primary my-3">
                                         Register
                                     </button>
                                 </div>

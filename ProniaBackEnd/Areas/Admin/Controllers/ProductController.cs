@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProniaBackEnd.Areas.Admin.ViewModels;
 using ProniaBackEnd.DAL;
@@ -8,6 +9,7 @@ using ProniaBackEnd.Utilities.Extensions;
 namespace ProniaBackEnd.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    
     public class ProductController : Controller
     {
         private readonly AppDbContext _db;
@@ -17,6 +19,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             _db = db;
             _env = env;
         }
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             List<Product> products=await _db.Products
@@ -27,7 +30,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
 
             return View(products);
         }
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
             CreateProductVM productVM = new CreateProductVM 
@@ -41,7 +44,6 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
 
             return View(productVM);
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Create(CreateProductVM productVM)
@@ -228,6 +230,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
 
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Detail(int id)
         {
             if (id <= 0) return BadRequest();
@@ -248,6 +251,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             return View(product );
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             if(id<=0) return BadRequest();
@@ -267,7 +271,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id)
         {
             if(id<=0) return BadRequest();

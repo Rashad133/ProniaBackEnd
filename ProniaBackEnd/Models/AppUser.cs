@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using ProniaBackEnd.Enum;
+
 
 namespace ProniaBackEnd.Models
 {
@@ -7,6 +7,6 @@ namespace ProniaBackEnd.Models
     {
         public string Name { get; set; }
         public string Surname { get; set; }
-        public Gender Gender {  get; set; } 
+        public string Gender {  get; set; } 
     }
 }

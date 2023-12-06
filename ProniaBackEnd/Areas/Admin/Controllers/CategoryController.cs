@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProniaBackEnd.Areas.Admin.ViewModels;
 using ProniaBackEnd.DAL;
@@ -14,6 +15,8 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         {
             _db = db;
         }
+
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             List<Category> categories = await _db.Categories.Include(c => c.Products).ToListAsync();
@@ -21,6 +24,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             return View(categories);
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -55,6 +59,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
 
 
         //Get Update//
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id)
         {
             if (id <= 0) return BadRequest();
@@ -97,6 +102,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
 
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             if (id <= 0) return BadRequest();
@@ -110,6 +116,8 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             await _db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        [Authorize(Roles = "Admin")]
         public IActionResult Detail(int id)
         {
             if (id <= 0) return BadRequest();

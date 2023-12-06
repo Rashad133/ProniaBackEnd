@@ -1,4 +1,4 @@
-﻿using ProniaBackEnd.Enum;
+﻿using ProniaBackEnd.Utilities.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace ProniaBackEnd.ViewModels

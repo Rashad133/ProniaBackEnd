@@ -33,13 +33,14 @@ builder.Services.AddScoped<LayoutService>();
 
 var app = builder.Build();
 
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseSession();
 
 app.UseStaticFiles();
-app.UseRouting();
+
 
 app.MapControllerRoute("areas", "{area:exists}/{controller=home}/{action=index}/{id?}");
 
