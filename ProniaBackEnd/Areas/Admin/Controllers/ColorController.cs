@@ -8,6 +8,7 @@ using ProniaBackEnd.Models;
 namespace ProniaBackEnd.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,Moderator")]
     [AutoValidateAntiforgeryToken]
     public class ColorController : Controller
     {
@@ -17,14 +18,14 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             _db = db;
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Moderator")]
         public async Task<IActionResult> Index()
         {
             List<Color> colors = await _db.Colors.Include(c=>c.ProductColors).ToListAsync();
             return View(colors);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Moderator")]
         [AutoValidateAntiforgeryToken]
         public IActionResult Create()
         {
@@ -59,7 +60,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
 
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Moderator")]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Update(int id)
         {
@@ -118,7 +119,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Moderator")]
         [AutoValidateAntiforgeryToken]
         public IActionResult Detail(int id)
         {

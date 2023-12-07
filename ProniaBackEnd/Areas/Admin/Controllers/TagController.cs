@@ -9,6 +9,7 @@ using System.Drawing;
 namespace ProniaBackEnd.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,Moderator")]
     [AutoValidateAntiforgeryToken]
     public class TagController : Controller
     {
@@ -17,7 +18,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         {
             _db=db;
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Moderator")]
         public async Task<IActionResult> Index()
         {
             List<Tag> tags= await _db.Tags.Include(t=>t.ProductTags).ToListAsync();
@@ -26,7 +27,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         }
 
         //Get//
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Moderator")]
         [AutoValidateAntiforgeryToken]
         public IActionResult Create()
         {
@@ -60,7 +61,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
 
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Moderator")]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Update(int id)
         {
@@ -119,7 +120,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Moderator")]
         [AutoValidateAntiforgeryToken]
         public IActionResult Detail(int id)
         {

@@ -6,7 +6,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
     public class HomeController : Controller
     {
         [Area("Admin")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Moderator")]
         [AutoValidateAntiforgeryToken]
         public IActionResult Index()
         {

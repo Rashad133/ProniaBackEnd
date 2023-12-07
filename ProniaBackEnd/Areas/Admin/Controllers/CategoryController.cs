@@ -8,6 +8,7 @@ using ProniaBackEnd.Models;
 namespace ProniaBackEnd.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,Moderator")]
     [AutoValidateAntiforgeryToken]
     public class CategoryController : Controller
     {
@@ -17,7 +18,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             _db = db;
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Moderator")]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Index()
         {
@@ -26,7 +27,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             return View(categories);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Moderator")]
         [AutoValidateAntiforgeryToken]
         public IActionResult Create()
         {
@@ -62,7 +63,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
 
 
         //Get Update//
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Moderator")]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Update(int id)
         {
@@ -122,7 +123,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Moderator")]
         [AutoValidateAntiforgeryToken]
         public IActionResult Detail(int id)
         {

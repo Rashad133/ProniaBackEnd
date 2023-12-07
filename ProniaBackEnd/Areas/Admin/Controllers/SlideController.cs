@@ -9,6 +9,7 @@ using ProniaBackEnd.Utilities.Extensions;
 namespace ProniaBackEnd.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,Moderator")]
     [AutoValidateAntiforgeryToken]
     public class SlideController : Controller
     {
@@ -21,7 +22,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Moderator")]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Index()
         {
@@ -30,7 +31,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             return View(slides);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Moderator")]
         [AutoValidateAntiforgeryToken]
         public IActionResult Create()
         {
@@ -81,7 +82,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Moderator")]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Update(int id)
         {
@@ -146,7 +147,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             
 
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Moderator")]
         [AutoValidateAntiforgeryToken]
         public IActionResult Detail(int id)
         {
