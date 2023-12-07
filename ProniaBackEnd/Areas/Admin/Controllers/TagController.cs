@@ -8,7 +8,8 @@ using System.Drawing;
 
 namespace ProniaBackEnd.Areas.Admin.Controllers
 {
-    [Area("Admin")]    
+    [Area("Admin")]
+    [AutoValidateAntiforgeryToken]
     public class TagController : Controller
     {
         private readonly AppDbContext _db;
@@ -26,6 +27,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
 
         //Get//
         [Authorize(Roles = "Admin")]
+        [AutoValidateAntiforgeryToken]
         public IActionResult Create()
         {
             return View();
@@ -59,6 +61,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Update(int id)
         {
             if (id <= 0) BadRequest();
@@ -101,6 +104,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Delete(int Id)
         {
             if(Id<=0) return BadRequest();
@@ -116,6 +120,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [AutoValidateAntiforgeryToken]
         public IActionResult Detail(int id)
         {
             if(id<=0) return BadRequest();

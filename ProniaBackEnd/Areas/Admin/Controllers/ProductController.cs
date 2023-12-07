@@ -9,6 +9,7 @@ using ProniaBackEnd.Utilities.Extensions;
 namespace ProniaBackEnd.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [AutoValidateAntiforgeryToken]
     
     public class ProductController : Controller
     {
@@ -31,6 +32,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             return View(products);
         }
         [Authorize(Roles = "Admin")]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Create()
         {
             CreateProductVM productVM = new CreateProductVM 
@@ -231,6 +233,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [AutoValidateAntiforgeryToken]
         public IActionResult Detail(int id)
         {
             if (id <= 0) return BadRequest();
@@ -252,6 +255,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             if(id<=0) return BadRequest();
@@ -272,6 +276,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
         [Authorize(Roles = "Admin")]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Update(int id)
         {
             if(id<=0) return BadRequest();
@@ -301,7 +306,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         }
 
         [HttpPost]
-
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Update(int id,UpdateProductVM productVM)
         {
             Product existed = await _db.Products.Include(pi=>pi.ProductImages).Include(p => p.ProductTags).Include(p => p.ProductColors).Include(p => p.ProductSizes).FirstOrDefaultAsync(p => p.Id == id);

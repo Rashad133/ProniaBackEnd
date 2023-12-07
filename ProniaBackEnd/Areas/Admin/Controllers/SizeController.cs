@@ -11,6 +11,7 @@ using Size = ProniaBackEnd.Models.Size;
 namespace ProniaBackEnd.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [AutoValidateAntiforgeryToken]
     public class SizeController : Controller
     {
         private readonly AppDbContext _db;
@@ -20,6 +21,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [AutoValidateAntiforgeryToken]
         public async  Task<IActionResult> Index()
         {
             List<Size> sizes = await _db.Sizes.Include(s=>s.ProductSizes).ToListAsync();
@@ -28,6 +30,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [AutoValidateAntiforgeryToken]
         public IActionResult Create()
         {
             return View();
@@ -64,6 +67,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Update(int id)
         {
             if (id <= 0) return BadRequest();
@@ -103,6 +107,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             if(id<=0) return BadRequest();
@@ -118,6 +123,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [AutoValidateAntiforgeryToken]
         public IActionResult Detail(int id)
         {
             if (id <= 0) return BadRequest();

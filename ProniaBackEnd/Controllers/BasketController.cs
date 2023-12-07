@@ -1,19 +1,24 @@
 ﻿using Azure.Core;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using ProniaBackEnd.DAL;
 using ProniaBackEnd.Models;
 using ProniaBackEnd.ViewModels;
+using System.Security.Claims;
 
 namespace ProniaBackEnd.Controllers
 {
     public class BasketController : Controller
     {
         private readonly AppDbContext _db;
-        public BasketController(AppDbContext db)
+        private readonly UserManager<AppUser> _userManager;
+        
+        public BasketController(AppDbContext db,UserManager<AppUser> userManager)
         {
             _db = db;
+            _userManager = userManager;
         }
         public async Task<IActionResult> Index()
         {
@@ -21,7 +26,7 @@ namespace ProniaBackEnd.Controllers
 
             if (Request.Cookies["Basket"] is not null)
             {
-                //Cookiesd-de olan datani saxlamaq ucun//
+                //Cookies-de olan datani saxlamaq ucun//
                 List<BasketCookieItemVM> basket = JsonConvert.DeserializeObject<List<BasketCookieItemVM>>(Request.Cookies["Basket"]);
 
                 foreach (var basketCookieItem in basket)
@@ -127,5 +132,69 @@ namespace ProniaBackEnd.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
+        public IActionResult CountMinus(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest();
+            }
+
+            List<BasketCookieItemVM> basket = JsonConvert.DeserializeObject<List<BasketCookieItemVM>>(Request.Cookies["Basket"]);
+
+            BasketCookieItemVM item = basket.FirstOrDefault(c => c.Id == id);
+
+            if (item == null)
+            {
+                return BadRequest();
+            }
+
+            item.Count--;
+
+            if (item.Count <= 0)
+            {
+                basket.Remove(item);
+            }
+
+            string json = JsonConvert.SerializeObject(basket);
+
+            Response.Cookies.Append("Basket", json, new CookieOptions
+            {
+                Expires = DateTimeOffset.Now.AddDays(1)
+            });
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> CountPlus(int id)
+        {
+            List<BasketCookieItemVM> basket = JsonConvert.DeserializeObject<List<BasketCookieItemVM>>(Request.Cookies["Basket"]);
+
+            BasketCookieItemVM item = basket.FirstOrDefault(c => c.Id == id);
+
+            if (item == null)
+                return BadRequest();
+
+            item.Count++;
+
+            if (item.Count <= 0)
+            {
+                basket.Remove(item);
+            }
+
+            string json = JsonConvert.SerializeObject(basket);
+
+            Response.Cookies.Append("Basket", json, new CookieOptions
+            {
+                Expires = DateTimeOffset.Now.AddDays(1)
+            });
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+
+
+
     }
 }

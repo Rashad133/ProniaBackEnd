@@ -70,13 +70,17 @@
                                             </td>
                                             <td class="quantity">
                                                 <div class="d-flex btn btn-dark">
-                                                    <a class="">
-                                                        <i class="fa fa-minus"></i>
-                                                    </a>
+                                                    <div class="dec qtybutton">
+                                                        <a asp-action="CountMinus" asp-controller="Basket" asp-route-id="@item.Id" class="">
+                                                            <i class="fa fa-minus"></i>
+                                                        </a>
+                                                    </div>
                                                     <p class="fw-bold mx-2">@item.Count</p>
-                                                    <a class="">
-                                                        <i class="fa fa-plus"></i>
-                                                    </a>
+                                                    <div class="inc qtybutton">
+                                                        <a asp-action="CountPlus" asp-controller="Basket" asp-route-id="@item.Id">
+                                                            <i class="fa fa-plus"></i>
+                                                        </a>
+                                                    </div>
                                                 </div>
                                             </td>
                                             <td class="product-subtotal">

@@ -8,6 +8,7 @@ using ProniaBackEnd.Models;
 namespace ProniaBackEnd.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [AutoValidateAntiforgeryToken]
     public class ColorController : Controller
     {
         private readonly AppDbContext _db;
@@ -24,6 +25,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [AutoValidateAntiforgeryToken]
         public IActionResult Create()
         {
             return View();
@@ -58,6 +60,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Update(int id)
         {
             if (id <= 0) BadRequest();
@@ -100,6 +103,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             if (id <= 0) return BadRequest();
@@ -115,6 +119,7 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [AutoValidateAntiforgeryToken]
         public IActionResult Detail(int id)
         {
             if (id <= 0) return BadRequest();
