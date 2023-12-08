@@ -24,6 +24,9 @@ namespace ProniaBackEnd.DAL
 
         public DbSet<Settings> Settings { get; set; }
 
+        public DbSet<BasketItem> BasketItems { get; set; }
+        public DbSet<Order> Orders { get; set; }
+
 
         
     }

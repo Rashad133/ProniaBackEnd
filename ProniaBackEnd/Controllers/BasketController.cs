@@ -48,6 +48,17 @@ namespace ProniaBackEnd.Controllers
                     }
                 }
             }
+
+            if (User.Identity.IsAuthenticated)
+            {
+
+            }
+            else
+            {
+
+
+            }
+
             return View(basketVM);
         }
 
@@ -58,16 +69,60 @@ namespace ProniaBackEnd.Controllers
             Product product = await _db.Products.FirstOrDefaultAsync(p=>p.Id==id);
 
             if(product is null) return NotFound();
-            List<BasketCookieItemVM> basket;
 
-            if (Request.Cookies["Basket"] is not null)
-            {
-                basket =JsonConvert.DeserializeObject<List<BasketCookieItemVM>>(Request.Cookies["Basket"]);
+            if (User.Identity.IsAuthenticated)
+            {//DB//
+                AppUser user = await _userManager.Users.Include(u => u.BasketItems).FirstOrDefaultAsync(u => u.Id == User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                if (user is null) return NotFound();
 
-                BasketCookieItemVM item = basket.FirstOrDefault(b=>b.Id==id);
-                if(Request.Cookies["Basket"] is not  null)
+                BasketItem item=user.BasketItems.FirstOrDefault(b=>b.ProductId==id);
+                if(item is null)
                 {
+                    item = new BasketItem
+                    {
+                        AppUserId=user.Id,
+                        ProductId=product.Id,
+                        Price=product.Price,
+                        Count=1
+                    };
+                    //await _db.BasketItems.AddAsync(item);
+                    user.BasketItems.Add(item);
+                }
+                else
+                {
+                    item.Count++;
                     
+                }
+
+                await _db.SaveChangesAsync();
+            }
+            else
+            {//Cookies//
+                List<BasketCookieItemVM> basket;
+
+                if (Request.Cookies["Basket"] is not null)
+                {
+                    basket = JsonConvert.DeserializeObject<List<BasketCookieItemVM>>(Request.Cookies["Basket"]);
+
+                    BasketCookieItemVM item = basket.FirstOrDefault(b => b.Id == id);
+                    if (Request.Cookies["Basket"] is not null)
+                    {
+
+                        BasketCookieItemVM basketCookieItemVM = new BasketCookieItemVM
+                        {
+                            Id = id,
+                            Count = 1
+                        };
+                        basket.Add(basketCookieItemVM);
+                    }
+                    else
+                    {
+                        item.Count++;
+                    }
+                }
+                else
+                {
+                    basket = new List<BasketCookieItemVM>();
                     BasketCookieItemVM basketCookieItemVM = new BasketCookieItemVM
                     {
                         Id = id,
@@ -75,27 +130,16 @@ namespace ProniaBackEnd.Controllers
                     };
                     basket.Add(basketCookieItemVM);
                 }
-                else
-                {
-                    item.Count++;
-                }
-            }
-            else
-            {
-                basket=new List<BasketCookieItemVM>();
-                BasketCookieItemVM basketCookieItemVM = new BasketCookieItemVM
-                {
-                    Id = id,
-                    Count = 1
-                };
-                basket.Add(basketCookieItemVM);
+
+
+
+                string json = JsonConvert.SerializeObject(basket);
+
+                Response.Cookies.Append("Basket", json);
             }
 
-            
 
-            string json= JsonConvert.SerializeObject(basket);
-
-            Response.Cookies.Append("Basket", json);
+           
 
             return RedirectToAction(nameof(Index),"Home");
         }
