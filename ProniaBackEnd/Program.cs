@@ -25,6 +25,9 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 
     options.Lockout.MaxFailedAccessAttempts = 3;
     options.Lockout.DefaultLockoutTimeSpan=TimeSpan.FromMinutes(3);
+    options.Lockout.AllowedForNewUsers = true;
+
+    options.SignIn.RequireConfirmedEmail = true;
 }
 ).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
 builder.Services.AddScoped<IEmailService, EmailService>();

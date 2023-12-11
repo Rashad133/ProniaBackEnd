@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using ProniaBackEnd.Interfaces;
 using ProniaBackEnd.Models;
 using ProniaBackEnd.Utilities.Enums;
 using ProniaBackEnd.ViewModels;
@@ -11,11 +12,13 @@ namespace ProniaBackEnd.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public AccountController(UserManager<AppUser> userManger,SignInManager<AppUser> signInManager,RoleManager<IdentityRole> roleManager)
+        private readonly IEmailService _emailService;
+        public AccountController(UserManager<AppUser> userManger,SignInManager<AppUser> signInManager,RoleManager<IdentityRole> roleManager,IEmailService emailService)
         {
             _userManager = userManger;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _emailService = emailService;
         }
         public IActionResult Register()
         {
@@ -49,10 +52,33 @@ namespace ProniaBackEnd.Controllers
             }
             await _userManager.AddToRoleAsync(user,UserRole.Member.ToString());
 
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account", new { token, Email = user.Email },Request.Scheme);
+
+            await _emailService.SendMailAsync(user.Email,"Email Confirmation",confirmationLink);
+            //await _signInManager.SignInAsync(user,isPersistent:false);
+
+
+            return RedirectToAction(nameof(SuccessfullyRegistered),"Account");
+        }
+        public async Task<IActionResult> ConfirmEmail(string token, string email)
+        {
+            AppUser user= await _userManager.FindByEmailAsync(email);
+            if (user == null) return NotFound();
+            var result = await _userManager.ConfirmEmailAsync(user,token);
+
+            if (!result.Succeeded)
+            {
+                return BadRequest();
+            }
             await _signInManager.SignInAsync(user,isPersistent:false);
-            return RedirectToAction("Index","Home");
+            return View();
         }
 
+        public IActionResult SuccessfullyRegistered()
+        {
+            return View();
+        }
         public IActionResult Login()
         {
             return View();
@@ -78,6 +104,11 @@ namespace ProniaBackEnd.Controllers
             if (result.IsLockedOut)
             {
                 ModelState.AddModelError(String.Empty, "Your account is currently blocked, check back later");
+                return View();
+            }
+            if (!user.EmailConfirmed)
+            {
+                ModelState.AddModelError(String.Empty,"Please confirm your email");
                 return View();
             }
             if (!result.Succeeded)
