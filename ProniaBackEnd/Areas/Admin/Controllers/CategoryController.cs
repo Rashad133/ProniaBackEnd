@@ -20,11 +20,20 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
 
         [Authorize(Roles = "Admin,Moderator")]
         [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page)
         {
-            List<Category> categories = await _db.Categories.Include(c => c.Products).ToListAsync();
+            double count = await _db.Categories.CountAsync();
 
-            return View(categories);
+            List<Category> categories = await _db.Categories.Skip(page*4).Take(4).Include(c => c.Products).ToListAsync();
+
+            PaginateVM<Category> paginateVM = new PaginateVM<Category>
+            {
+                CurrentPage= page,
+                TotalPage= Math.Ceiling(count/4),
+                Items= categories
+            };
+
+            return View(paginateVM);
         }
 
         [Authorize(Roles = "Admin,Moderator")]

@@ -22,15 +22,24 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             _env = env;
         }
         [Authorize(Roles = "Admin,Moderator")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page)
         {
-            List<Product> products=await _db.Products
+            double count =await _db.Products.CountAsync();
+
+            List<Product> products=await _db.Products.Skip(page*3).Take(3)
                 .Include(p=>p.Category)
                 .Include(p=>p.ProductImages
                 .Where(pi=>pi.IsPrimary==true))
                 .ToListAsync();
+            PaginateVM<Product> paginateVM = new PaginateVM<Product>
+            {
 
-            return View(products);
+                CurrentPage = page + 1,
+                TotalPage=Math.Ceiling(count/3),
+                Items=products
+            };
+
+            return View(paginateVM);
         }
         [Authorize(Roles = "Admin,Moderator")]
         [AutoValidateAntiforgeryToken]

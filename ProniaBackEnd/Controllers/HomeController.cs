@@ -20,6 +20,7 @@ namespace ProniaBackEnd.Controllers
         public async Task<IActionResult> Index()
         {
             
+            
             List<Slide> slides = await _db.Slides.OrderBy(s=>s.Order).Take(2).ToListAsync();
 
             List<Product> products = await _db.Products.Include(p=>p.ProductImages.Where(pi=>pi.IsPrimary!=null)).Take(8).ToListAsync();
@@ -34,25 +35,12 @@ namespace ProniaBackEnd.Controllers
             return View(vm);
         }
 
-        //public IActionResult Test()
-        //{
-        //    Response.Cookies.Append("Score", "5-0",new CookieOptions
-        //    {
-        //        MaxAge=TimeSpan.FromSeconds(50)
-        //    });
+        public IActionResult ErrorPage(string error)
+        {
             
-        //    HttpContext.Session.SetString("Score2","6-1");
-            
+            return View(model:error);
+        }
 
-        //    return Ok();
-        //}
-
-        //public IActionResult GetCookie()
-        //{
-        //    string score= Request.Cookies["Score"];
-        //    string score2=HttpContext.Session.GetString("Score2");
-        //    return Content(score+" "+score2);
-
-        //}
+        
     }
 }

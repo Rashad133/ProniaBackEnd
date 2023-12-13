@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProniaBackEnd.DAL;
 using ProniaBackEnd.Models;
+using ProniaBackEnd.Utilities.Exceptions;
 using ProniaBackEnd.ViewModels;
 
 
@@ -23,8 +24,8 @@ namespace ProniaBackEnd.Controllers
 
         public async Task<IActionResult> Detail(int id)
         {
-        
-            if(id <= 0) return BadRequest();
+
+            if (id <= 0) throw new WrongRequestException("The request sent is invalid");
            
             Product product = await _db.Products
                 .Include(p=>p.Category)
@@ -35,7 +36,7 @@ namespace ProniaBackEnd.Controllers
                 .FirstOrDefaultAsync(x => x.Id == id);
 
 
-            if(product == null) return NotFound();
+            if (product == null) throw new NotFoundException("No such product found");
 
             List<Product> products = await _db.Products
                 .Include(p=>p.ProductImages.Where(pi=>pi.IsPrimary!=null))

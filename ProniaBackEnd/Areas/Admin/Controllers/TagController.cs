@@ -19,11 +19,20 @@ namespace ProniaBackEnd.Areas.Admin.Controllers
             _db=db;
         }
         [Authorize(Roles = "Admin,Moderator")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page)
         {
-            List<Tag> tags= await _db.Tags.Include(t=>t.ProductTags).ToListAsync();
+            double count = await _db.Tags.CountAsync();
 
-            return View(tags);
+            List<Tag> tags= await _db.Tags.Skip(page*2).Take(3).Include(t=>t.ProductTags).ToListAsync();
+
+            PaginateVM<Tag> paginateVM = new PaginateVM<Tag>
+            {
+                CurrentPage = page,
+                TotalPage= Math.Ceiling(count/3),
+                Items=tags,
+            };
+
+            return View(paginateVM);
         }
 
         //Get//
