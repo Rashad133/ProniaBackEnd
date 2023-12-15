@@ -809,7 +809,7 @@
                                 <img class="img-full"
                                      src="~/assets/images/website-images/@item.Image"
                                      alt="Product Image" />
-                            </a>
+                            </a>    
                             <div class="product-item_content">
                                 <a class="product-item_title"
                                    asp-action="detail" asp-controller="product" asp-route-id="@item.Id">@item.Name</a>
@@ -825,7 +825,7 @@
             </div>
             <div class="group-btn_wrap d-grid gap-2">
                 <a asp-action="Index" asp-controller="Basket" class="btn btn-dark">View Cart</a>
-                <a href="checkout.html" class="btn btn-dark">Checkout</a>
+                <a asp-action="Checkout" asp-controller="Basket" class="btn btn-dark">Checkout</a>
             </div>
         </div>
     </div>
